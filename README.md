@@ -1,1 +1,1 @@
-# optimize-performance-infinite-scroll
+# optimize-perf-infinite-scroll
