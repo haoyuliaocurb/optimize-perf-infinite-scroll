@@ -1,8 +1,15 @@
 import { memo } from 'react';
-import HomePage from '../page/HomePage';
+import NavBar from './NavBar';
+import Main from './Main';
+import StyledApp from '../styles/app/StyledApp';
 
 const App = memo(() => {
-  return <HomePage />;
+  return (
+    <StyledApp>
+      <NavBar />
+      <Main />
+    </StyledApp>
+  );
 });
 
 export default App;
