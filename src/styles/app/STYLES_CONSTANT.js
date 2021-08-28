@@ -4,6 +4,8 @@ const STYLES_CONSTANT = {
   },
   color: {
     beige100: '#fffaf0',
+    beige400: '#deb887',
+    beigeTrans400: 'rgba(222, 184, 135, 0)',
   },
 };
 

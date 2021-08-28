@@ -1,4 +1,5 @@
 import styled from '@emotion/styled/macro';
+import STYLES_CONSTATNT from '../app/STYLES_CONSTANT';
 
 const StyledNormalCard = styled.div`
   position: relative;
@@ -16,6 +17,10 @@ const StyledNormalCard = styled.div`
   }
   > p {
     width: 100%;
+    height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   > .authorTag {
     font-weight: 500;
@@ -30,6 +35,18 @@ const StyledNormalCard = styled.div`
     object-position: center center;
     width: 100%;
     height: 60%;
+  }
+  > .loader {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    width: 100%;
+    height: 60%;
+    background-color: ${STYLES_CONSTATNT.color.beige100};
+    transition: all 1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 

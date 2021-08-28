@@ -31,3 +31,11 @@ a:focus, a:active, a:hover, a:link, a:visited {
 [type=button], [type=reset], [type=submit], button {
   -webkit-appearance: none;
 }
+
+.op-zero {
+  opacity: 0;
+}
+
+.dp-none {
+  display: none;
+}
