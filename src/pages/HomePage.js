@@ -17,7 +17,7 @@ const HomePage = memo(() => {
       }
       isScrollFinished.current = false;
       page.current += 1;
-      // console.log('page.current: ', page.current);
+      console.log('page.current: ', page.current);
       if (page.current !== 1) {
         setPics((prePics) => {
           return [...prePics, ...Array.from({ length: 30 }).map(() => [])];

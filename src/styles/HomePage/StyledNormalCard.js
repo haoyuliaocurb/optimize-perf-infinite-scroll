@@ -17,7 +17,7 @@ const StyledNormalCard = styled.div`
   }
   > p {
     width: 100%;
-    height: 16px;
+    height: 20px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
