@@ -3,8 +3,8 @@ import STYLES_CONSTATNT from '../app/STYLES_CONSTANT';
 
 const StyledNormalCard = styled.div`
   position: relative;
-  width: 220px;
-  height: 200px;
+  width: ${STYLES_CONSTATNT.homePage.cardWidth};
+  height: ${STYLES_CONSTATNT.homePage.cardHeight};
   flex-shrink: 0;
   border-bottom: solid rgba(0, 0, 0, 0.3) 1px;
   display: flex;

@@ -3,21 +3,26 @@ import StyledNormalCard from '../../styles/HomePage/StyledNormalCard';
 import DotSpinLoader from '../shared/DotSpinLoader';
 
 // eslint-disable-next-line no-unused-vars
-const NormalCard = memo(({ author, url }) => {
+const NormalCard = memo(({ index, author, url, style }) => {
   const imgRef = useRef(null);
   const loaderRef = useRef(null);
   const DotSpinLoaderRef = useRef(null);
   const handleImgLoad = () => {
+    // console.log(true);
     loaderRef.current.classList.add('op-zero');
     DotSpinLoaderRef.current.classList.add('dp-none');
   };
   useEffect(() => {
-    imgRef.current.addEventListener('load', () => {
-      handleImgLoad();
-    });
+    // console.log(`<NormalCard key=${index === undefined ? null : index} /> mount`);
+    imgRef.current.addEventListener('load', handleImgLoad);
+    const imgRefCurrent = imgRef.current;
+    return () => {
+      imgRefCurrent.removeEventListener('load', handleImgLoad);
+      // console.log(`<NormalCard key=${index === undefined ? null : index} /> unmount`);
+    };
   }, [url]);
   return (
-    <StyledNormalCard>
+    <StyledNormalCard style={style}>
       <div ref={loaderRef} className="loader">
         <DotSpinLoader DotSpinLoaderRef={DotSpinLoaderRef} />
       </div>
