@@ -36,6 +36,20 @@ const StyledNormalCard = styled.div`
     width: 100%;
     height: 60%;
   }
+  > img::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: ${STYLES_CONSTATNT.color.beige200};
+    z-index: 5;
+    opacity: 0;
+  }
+  &.handleImgError {
+    > img::before {
+      opacity: 1;
+    }
+  }
   > .loader {
     position: absolute;
     z-index: 5;
