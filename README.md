@@ -26,13 +26,13 @@
 - 專案網址：https://optimize-perf-infinite-scroll.web.app/
 
 ## 專案摘要
-「TodoShop 從購物清單開始：創新電商網站」，其創新之處在於可以讓使用者從建立購物清單開始，並將購物清單無縫地轉換，進一步搜尋清單中的所有商品，簡單的在一個頁面中呈現
+「optimize-perf-infinite-scroll」為一頁式網站作品，作品專注於優化 Infinite scroll 之效能，使用 Lighthouse 檢測，最終提升效能 28%、SEO 82 分，優化途徑包含 Lazy loading、防止事件抖動、Virtualized list 等。此外，使用 webpack、Eslint/Prettier 等工具建構開發環境，並關注 Error handling、SEO 等議題。
 
 ![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/homePage-lg.png)
 
 ## 開發介紹
 ### 技術架構及摘要
-![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/opis-construction-1.png)
+![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/opis-construction-1.jpeg)
 
 - 更多細節可見附錄 [技術介紹](#技術介紹)
 - 前端開發：使用 [React 生態系]((#react))、[Sass/SCSS](#sassscss)、[Normalize.css]((#Normalizecss)) 等獨立開發，並實踐 [RWD、AJAX、reusable React component](#專案細節) 等，沒有使用任何前端 UI 套件
@@ -41,12 +41,13 @@
 
 ### 目錄架構
 
-![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/opis-construction-2.png)
+![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/opis-construction-2.jpeg)
 
 以 [Create-react-app](#Create-react-app) 建立專案目錄基礎分立 src、public，其中 src 之中分立 app、components、pages、styles、utils 等子目錄
 * app、components、pages：放置 React component 檔案；root component App.js 放置 app 目錄；HomePage、SearchPage 等頁面 component 放置 pages 目錄，其餘者依照所屬 page 分類在 components 目錄
 * styles：放置 Styled components 檔案，依照所屬 page 分類；general.scss 具有全域 styles，cssMaterials.js 存放 styles 相關變數及跨頁面邏輯 
 * utils：放置 Firebase config script、開發者自身 Library 等
+
 ### 開發流程
 以 [Git Flow](#gitgithub) 為基礎進行開發，並迭代進行 QA
 * 初始化專案時，具有 main、develop branch
