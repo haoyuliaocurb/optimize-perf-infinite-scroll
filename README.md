@@ -5,22 +5,27 @@
 3. [開發介紹](#開發介紹)
     - [技術架構及摘要](#技術架構及摘要)
         - 前端開發
+        - 前端優化
         - 後端開發
         - 開發工具
     - [目錄架構](#目錄架構)
     - [開發流程](#開發流程)
+        1. 以 Git Flow 為基礎進行開發，並迭代進行 QA
+        2. 使用 npm、webpack、webpack-dev-server、Babel 建置開發環境
+        3. 使用 ESLint、Prettier
+    - [前端優化實踐](#前端優化實踐)
+        1. 此次前端優化包含兩大限制
+        2. 使用 Lighthouse 檢測：提升效能 28%、SEO 82 分
+        3. 實踐 Loader、Lazy load、防止事件抖動、Virtualized list
+        4. 優化 React 程式碼
+        5. 優化 SEO
     - [程式設計摘要](#程式設計摘要)
-        1. [SPA Routing](#SPA-Routing)
-        2. [會員系統建立、登入狀態管理](#會員系統建立登入狀態管理)
-        3. [登入狀態驗證、redirect](#登入狀態驗證redirect)
-        4. [composition 概念、reusable component](composition-概念reusable-component)
-        5. [Imperative operation：useRef、ref 屬性](#imperative-operationuserefref-屬性)
+        1. Error handling 例外處理
 4. [附錄](#附錄)
     - [技術介紹](#技術介紹)
     - [專案介紹](#專案介紹)
-        - [購物清單頁](#購物清單頁)
-        - [搜尋頁：輕鬆模式、普通模式](#搜尋頁輕鬆模式普通模式)
-        - [購物車、付款頁、會員中心](#購物車付款頁會員中心)
+        - Loader 載入狀態
+        - Error handling 例外處理
 
 ## 專案展示
 - 專案網址：https://optimize-perf-infinite-scroll.web.app/
@@ -34,11 +39,10 @@
 ### 技術架構及摘要
 ![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/opis-construction-1.jpeg)
 
-- 更多細節可見附錄 [技術介紹](#技術介紹)
 - 前端開發：使用 [React 生態系]((#react))、[Sass/SCSS](#sassscss)、[Normalize.css]((#Normalizecss)) 等獨立開發，並實踐 RWD、AJAX等，沒有使用任何前端 UI 套件
 - 前端優化：使用 Lighthouse 檢測，最終提升效能 28%、SEO 82 分，詳見 [前端優化實踐](#前端優化實踐)
 - 後端開發：使用 [Firebase](#firebase-hosting) 服務開發 web server
-- 開發工具：使用 [Git/GitHub](#gitgithub) 做版本控管，使用 [npm、webpack、webpack-dev-server、Babel](#npmwebpackwebpack-dev-serverbabel) 建置開發環境，使用 [ESLint、Prettier](#eslintprettier) 統一開發風格，更多細節可見 [開發流程](#開發流程)
+- 開發工具：使用 [Git/GitHub](#gitgithub) 做版本控管，使用 [npm、webpack、webpack-dev-server、Babel](#npmwebpackwebpack-dev-serverbabel) 建置開發環境，使用 [ESLint、Prettier](#eslintprettier) 統一開發風格，詳見 [開發流程](#開發流程)
 
 ### 目錄架構
 
@@ -48,7 +52,7 @@
 * app、components、pages：放置 React component 檔案；root component App.js 放置 app 目錄；HomePage 頁面 component 放置 pages 目錄，其餘者依照所屬 page 分類在 components 目錄
 * styles：放置 Styled components 檔案，依照所屬 page 分類；general.scss 具有全域 styles，STYLES_CONSTANT.js 存放 styles 相關變數及跨頁面邏輯 
 * utils：放置開發者自身 Library
-- 透過 package.json、webpack.config.js、babel.config.json、.eslintrc.js、.prettierrc 設定檔，設定開發環境細節
+- 透過 package.json、webpack.config.js、babel.config.json、.eslintrc.js、.prettierrc 設定檔，設定開發環境細節，，詳見 [開發流程](#開發流程)
 
 ### 開發流程
 1. #### 以 [Git Flow](#gitgithub) 為基礎進行開發，並迭代進行 QA
@@ -137,18 +141,21 @@
 ![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/homePage-lg.png)
 
 - #### Loader 載入狀態
-在購物清單頁中，使用者可以瀏覽、新增、刪除購物清單，並進一步編輯購物清單內容，新增、刪除清單項目。於手機螢幕中，瀏覽購物清單、編輯購物清單會分為兩個頁面呈現。
+如前端優化實踐區塊中 [實踐 Loader、Lazy load、防止事件抖動、Virtualized list](#前端優化實踐)項目所述，Loader 之實踐可以優化 Lighthouse FCP 指標，在圖片載入時給予回饋，優化使用者體驗
 
-圖：購物清單頁左半部所被選取的購物清單，其內容會顯示於右半部
+圖：於圖片載入中時顯示 Loader
 
 ![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/homePage-loader-lg.png)
 
 圖左：首頁<br>
-圖右：載入狀態
+圖右：Loader 及顯示圖片之 transition 效果
 
 ![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/homePage-combined-sm.png)
 
 - #### Error handling 例外處理
+如程式設計摘要區塊中 [Error handling 例外處理](#程式設計摘要)項目所述
+- 當圖片載入失敗時，即觸發 /<img> error 事件，顯示淺米色色塊，表示載入「空圖片」
+- 當 fetch API 程式碼擲出 error、response.ok 為 false 時，則顯示「網路連線問題使資料載入不全」modal；於連線恢復正常後，觸發 scroll 會重新載入前次為成功載入之頁數資料
 
 圖：例外處理，當例外產生時，會出現 Modal 已告知使用者資料載入不全
 
