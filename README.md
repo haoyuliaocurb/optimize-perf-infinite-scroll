@@ -35,25 +35,41 @@
 ![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/opis-construction-1.jpeg)
 
 - 更多細節可見附錄 [技術介紹](#技術介紹)
-- 前端開發：使用 [React 生態系]((#react))、[Sass/SCSS](#sassscss)、[Normalize.css]((#Normalizecss)) 等獨立開發，並實踐 [RWD、AJAX、reusable React component](#專案細節) 等，沒有使用任何前端 UI 套件
-- 後端開發：使用 [Firebase](#Firebase-Firestore) 服務開發資料庫、web server、會員系統等，其中為了串接兩個第三方服務：[TapPay](#第三方服務) (金流)、[Algolia](#第三方服務) (Full-text search 套件)，需要使用 [Firebase Cloud Functions](#Firebase-Cloud-Functions) 自訂兩個跨網域 API，以 [Node.js、Express.js、Axios](#nodejsexpressjsaxios) 技術撰寫程式碼，使前端與 API、API 與第三方服務 req/res
-- 開發工具：使用 [Git/GitHub](#gitgithub) 做版本控管，並迭代進行 QA，更多細節可見 [開發流程](#開發流程)
+- 前端開發：使用 [React 生態系]((#react))、[Sass/SCSS](#sassscss)、[Normalize.css]((#Normalizecss)) 等獨立開發，並實踐 RWD、AJAX等，沒有使用任何前端 UI 套件
+- 前端優化：使用 Lighthouse 檢測，最終提升效能 28%、SEO 82 分，詳見 [前端優化實踐](#前端優化實踐)
+- 後端開發：使用 [Firebase](#firebase-hosting) 服務開發 web server
+- 開發工具：使用 [Git/GitHub](#gitgithub) 做版本控管，使用 [npm、webpack、webpack-dev-server、Babel](#npmwebpackwebpack-dev-serverbabel) 建置開發環境，使用 [ESLint、Prettier](#eslintprettier) 統一開發風格，更多細節可見 [開發流程](#開發流程)
 
 ### 目錄架構
 
 ![](https://github.com/haoyuliaocurb/optimize-perf-infinite-scroll/blob/main/images/opis-construction-2.jpeg)
 
-以 [Create-react-app](#Create-react-app) 建立專案目錄基礎分立 src、public，其中 src 之中分立 app、components、pages、styles、utils 等子目錄
-* app、components、pages：放置 React component 檔案；root component App.js 放置 app 目錄；HomePage、SearchPage 等頁面 component 放置 pages 目錄，其餘者依照所屬 page 分類在 components 目錄
-* styles：放置 Styled components 檔案，依照所屬 page 分類；general.scss 具有全域 styles，cssMaterials.js 存放 styles 相關變數及跨頁面邏輯 
-* utils：放置 Firebase config script、開發者自身 Library 等
+專案目錄分立 src、public，其中 src 之中分立 app、components、pages、styles、utils 等子目錄
+* app、components、pages：放置 React component 檔案；root component App.js 放置 app 目錄；HomePage 頁面 component 放置 pages 目錄，其餘者依照所屬 page 分類在 components 目錄
+* styles：放置 Styled components 檔案，依照所屬 page 分類；general.scss 具有全域 styles，STYLES_CONSTANT.js 存放 styles 相關變數及跨頁面邏輯 
+* utils：放置開發者自身 Library
+- 透過 package.json、webpack.config.js、babel.config.json、.eslintrc.js、.prettierrc 設定檔，設定開發環境細節
 
 ### 開發流程
-以 [Git Flow](#gitgithub) 為基礎進行開發，並迭代進行 QA
+1. #### 以 [Git Flow](#gitgithub) 為基礎進行開發，並迭代進行 QA
 * 初始化專案時，具有 main、develop branch
 * 開發新頁面、新功能時，則新增 branch feature/featureName 進行開發
 * 開發完成後以 develop merge  feature/featureName branch
 * 階段性發行版本則以 release/versionName 紀錄，並增加 tag 標記 release 版本
+
+2. #### 使用 [npm、webpack、webpack-dev-server、Babel](#npmwebpackwebpack-dev-serverbabel) 建置開發環境
+- npm 設定檔 package.json
+  - 透過 scripts 屬性設置 CLI shortcut 指令
+  - 管理專案使用之 npm 套件
+- webpack webpack.config.js
+  - 設置 entry point 及 bundle.js 儲存路徑
+  - 透過 rules 屬性設置相關 loaders 處理特定類型檔案
+- 使用 webpack-dev-server 建置本機端 live server，於開發時檢視程式運行狀況
+- Babel 設定檔 babel.config.json
+  - 設置相關 presets 及 plugins 以讓 babel-loader 達到預定編譯效果
+
+3. #### 使用 [ESLint、Prettier](#eslintprettier)
+- 透過設定檔 .eslintrc.js、.prettierrc 設定相關規則以檢測程式碼，統一開發風格
 
 ### 前端優化實踐
 1. #### 此次前端優化包含兩大限制
@@ -86,6 +102,11 @@
 - 優化 HTML 撰寫，使用 HTML 語意標籤、處理 <meta> 標籤等
 - 優化 LCP、TTI、TBT 指標表現，使用 Lazy load、Virtualized list 等方法減少網頁渲染時間
 
+### 程式設計摘要
+1. #### Error handling 例外處理
+- 當圖片載入失敗時，即觸發 /<img> error 事件，顯示淺米色色塊，表示載入「空圖片」
+- 當 fetch API 程式碼擲出 error、response.ok 為 false 時，則顯示「網路連線問題使資料載入不全」modal；於連線恢復正常後，觸發 scroll 會重新載入前次為成功載入之頁數資料
+
 ## 附錄
 ### 技術介紹
 #### 前端
@@ -97,8 +118,6 @@
   使用 Normalize.css 作跨瀏覽器 CSS 問題處理
 - ##### ES6 JavaScript
   使用 ES6 JavaScript 語法做開發
-- ##### ESLint/Prettier
-  導入 ESLint/Prettier 統一開發風格
 
 #### 後端
 - ##### Firebase Hosting
@@ -108,7 +127,9 @@
 - ##### Git/GitHub
   使用 Git/GitHub 做版本控管，嘗試實踐 Git Flow
 - ##### NPM、Webpack、webpack-dev-server、Babel
-  使用 NPM、Webpack、webpack-dev-server、Babel 建置開發環境
+  使用 npm、webpack、webpack-dev-server、Babel 建置開發環境
+- ##### ESLint/Prettier
+  導入 ESLint/Prettier 統一開發風格
 
 ### 專案介紹
 「optimize-perf-infinite-scroll」為一頁式網站作品，作品專注於優化 Infinite scroll 之效能，使用 Lighthouse 檢測，最終提升效能 28%、SEO 82 分，優化途徑包含 Lazy loading、防止事件抖動、Virtualized list 等。此外，使用 webpack、Eslint/Prettier 等工具建構開發環境，並關注 Error handling、SEO 等議題。
