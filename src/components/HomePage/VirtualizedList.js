@@ -48,6 +48,7 @@ const VirtualizedList = memo(() => {
   });
   const isAllPicsLoaded = useRef(false);
   const isScrollFinished = useRef(true);
+  const isFetchFailed = useRef(false);
   const updatePics = async () => {
     const showModolMessagError = () => {
       ModolMessagErrorRef.current.classList.remove('op-zero');
@@ -60,17 +61,22 @@ const VirtualizedList = memo(() => {
         return;
       }
       isScrollFinished.current = false;
-      page.current += 1;
-      scrollHeight.current = calcScrollHeight();
-      // console.log('scrollHeight.current: ', scrollHeight.current);
-      if (page.current !== 1) {
-        setPics((prePics) => {
-          return [...prePics, ...Array.from({ length: 30 }).map(() => [])];
-        });
+      if (!isFetchFailed.current) {
+        page.current += 1;
+        scrollHeight.current = calcScrollHeight();
+        // console.log('scrollHeight.current: ', scrollHeight.current);
+        if (page.current !== 1) {
+          setPics((prePics) => {
+            return [...prePics, ...Array.from({ length: 30 }).map(() => [])];
+          });
+        }
       }
       const res = await fetch(`https://picsum.photos/v2/list?page=${page.current}`);
+      // console.log('updatePics', 'page.current: ', page.current);
       if (!res.ok) {
         showModolMessagError();
+        isFetchFailed.current = true;
+        isScrollFinished.current = true;
         return;
       }
       const newPics = await res.json();
@@ -87,6 +93,8 @@ const VirtualizedList = memo(() => {
       });
     } catch {
       showModolMessagError();
+      isFetchFailed.current = true;
+      isScrollFinished.current = true;
     }
   };
   const getCards = () => {
