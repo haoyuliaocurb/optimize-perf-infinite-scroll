@@ -4,6 +4,7 @@ import StyledVirtualizedList from '../../styles/HomePage/StyledVirtualizedList';
 import NormalCard from './NormalCard';
 import STYLES_CONSTANT from '../../styles/app/STYLES_CONSTANT';
 import { removePx } from '../../utils/self-library';
+import ModalMessageError from '../shared/ModalMessageError';
 
 const NUM_CARD_PER_PAGE = 30;
 const CARD_FULL_WIDTH =
@@ -13,6 +14,7 @@ const CARD_FULL_HEIGHT =
   removePx(STYLES_CONSTANT.homePage.cardMarginBottom);
 
 const VirtualizedList = memo(() => {
+  const ModolMessagErrorRef = useRef(null);
   const [isScrollRefSet, setIsScrollRefSet] = useState(0);
   const scrollRef = useRef(null);
   const isTouchScrollEnd = useRef(false);
@@ -46,21 +48,37 @@ const VirtualizedList = memo(() => {
   });
   const isAllPicsLoaded = useRef(false);
   const isScrollFinished = useRef(true);
+  const isFetchFailed = useRef(false);
   const updatePics = async () => {
+    const showModolMessagError = () => {
+      ModolMessagErrorRef.current.classList.remove('op-zero');
+      ModolMessagErrorRef.current.addEventListener('transitionend', () => {
+        ModolMessagErrorRef.current.classList.add('op-zero');
+      });
+    };
     try {
       if (isAllPicsLoaded.current || !isScrollFinished.current) {
         return;
       }
       isScrollFinished.current = false;
-      page.current += 1;
-      scrollHeight.current = calcScrollHeight();
-      // console.log('scrollHeight.current: ', scrollHeight.current);
-      if (page.current !== 1) {
-        setPics((prePics) => {
-          return [...prePics, ...Array.from({ length: 30 }).map(() => [])];
-        });
+      if (!isFetchFailed.current) {
+        page.current += 1;
+        scrollHeight.current = calcScrollHeight();
+        // console.log('scrollHeight.current: ', scrollHeight.current);
+        if (page.current !== 1) {
+          setPics((prePics) => {
+            return [...prePics, ...Array.from({ length: 30 }).map(() => [])];
+          });
+        }
       }
       const res = await fetch(`https://picsum.photos/v2/list?page=${page.current}`);
+      // console.log('updatePics', 'page.current: ', page.current);
+      if (!res.ok) {
+        showModolMessagError();
+        isFetchFailed.current = true;
+        isScrollFinished.current = true;
+        return;
+      }
       const newPics = await res.json();
       if (newPics.length === 0) {
         isAllPicsLoaded.current = true;
@@ -74,7 +92,9 @@ const VirtualizedList = memo(() => {
         return prePics.slice(0, prePics.length - 30).concat(newPics);
       });
     } catch {
-      //
+      showModolMessagError();
+      isFetchFailed.current = true;
+      isScrollFinished.current = true;
     }
   };
   const getCards = () => {
@@ -184,9 +204,6 @@ const VirtualizedList = memo(() => {
       updatePics();
     }
   }, [pics]);
-  // useEffect(() => {
-  //   console.log('forceUpdate');
-  // }, [forceUpdateValue]);
   return (
     <StyledVirtualizedList
       onScroll={handleScroll}
@@ -197,6 +214,16 @@ const VirtualizedList = memo(() => {
       ref={scrollRef}
     >
       <div className="scroll">{isScrollRefSet < 2 ? '' : getCards()}</div>
+      <ModalMessageError
+        message={
+          <span>
+            網路連線問題
+            <br />
+            使資料載入不全
+          </span>
+        }
+        ModolMessagErrorRef={ModolMessagErrorRef}
+      />
     </StyledVirtualizedList>
   );
 });
