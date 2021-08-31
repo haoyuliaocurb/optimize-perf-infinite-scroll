@@ -56,6 +56,9 @@ const VirtualizedList = memo(() => {
         ModolMessagErrorRef.current.classList.add('op-zero');
       });
     };
+    // console.log('isScrollFinished.current: ', isScrollFinished.current);
+    // console.log('isFetchFailed.current: ', isFetchFailed.current);
+    // console.log('page.current: ', page.current);
     try {
       if (isAllPicsLoaded.current || !isScrollFinished.current) {
         return;
@@ -72,7 +75,6 @@ const VirtualizedList = memo(() => {
         }
       }
       const res = await fetch(`https://picsum.photos/v2/list?page=${page.current}`);
-      // console.log('updatePics', 'page.current: ', page.current);
       if (!res.ok) {
         showModolMessagError();
         isFetchFailed.current = true;
@@ -82,10 +84,13 @@ const VirtualizedList = memo(() => {
       const newPics = await res.json();
       if (newPics.length === 0) {
         isAllPicsLoaded.current = true;
+        page.current -= 1;
+        scrollHeight.current = (pics.length / cardsPerRow) * CARD_FULL_HEIGHT;
       }
       setPics((prePics) => {
         isScrollFinished.current = true;
         isTouchScrollEnd.current = false;
+        isFetchFailed.current = false;
         if (page.current === 1) {
           return [...newPics];
         }
